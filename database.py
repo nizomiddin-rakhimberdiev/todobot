@@ -1,5 +1,6 @@
 import os
 import sqlite3
+from datetime import datetime
 from multiprocessing import Pool
 from typing import Union
 
@@ -12,9 +13,13 @@ class Database:
         self.cursor = self.connection.cursor()
 
     def add_todo(self, title, description):
+        done = False
+        created_at = datetime.now()
+        updated_at = created_at
         self.cursor.execute("""
-        INSERT INTO bot_todo (title, description)
-        VALUES (?, ?)""", (title, description))
+        INSERT INTO bot_todo (title, description, done, created_at, updated_at)
+        VALUES (?, ?, ?, ?, ?)""", (title, description, done, created_at, updated_at))
+        self.connection.commit()
 
 
     def get_todos(self):
