@@ -2,7 +2,7 @@ from aiogram import Bot, Dispatcher, executor, types
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
 from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters.state import StatesGroup, State
-
+from keyboards import menu
 from database import Database
 
 TOKEN = "7008107531:AAEZTtYqdw9MZD8yXy094CcggeyEOhjoqWo"
@@ -23,22 +23,23 @@ class TodoState(StatesGroup):
 
 @dp.message_handler(commands=["start"])
 async def start(message: types.Message):
-    await message.answer(f"Assalamu alaykum, {message.from_user.full_name}\n"
-                         f"Tasklar ro'yxatini ko'rish uchun /todos ni bosing\n"
-                         f"Agar Task yaratmochi bo'lsangiz /create_todo ni bosing")
+    await message.answer(f"Assalamu alaykum, {message.from_user.full_name}\n", reply_markup=menu)
 
 
-@dp.message_handler(commands=["todos"])
+@dp.message_handler(text="Tasklar ro'yxati")
 async def todos(message: types.Message):
     todos = db.get_todos()
     for todo in todos:
         text = ""
         for i in todo:
-            text += str(i) + "\n"
+            if i == 0:
+                text += "Bajarilmagan" + '\n'
+            else:
+                text += str(i) + "\n"
 
         await message.answer(text)
 
-@dp.message_handler(commands=["create_todo"])
+@dp.message_handler(text="Yangi task yaratish")
 async def create_todo(message: types.Message):
     await message.answer("Titleni kiriting:")
     await TodoState.title.set()
