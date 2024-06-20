@@ -29,3 +29,9 @@ class Database:
         UPDATE bot_todo SET done = True WHERE id = ?;
         """, todo_id)
         self.connection.commit()
+
+    def delete_todo(self, todo_id):
+        self.cursor.execute("""
+                DELETE FROM bot_todo WHERE id = ?;
+                """, todo_id)
+        self.connection.commit()

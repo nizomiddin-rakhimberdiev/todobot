@@ -85,5 +85,17 @@ async def update_status(call: types.CallbackQuery):
     await call.message.answer("Status o'zgartirildi")
 
 
+@dp.callback_query_handler(text='delete')
+async def update_status(call: types.CallbackQuery):
+    text = call.message.text
+    id = text.split('\n')[0]
+    id = id[4:]
+    print(type(id))
+    print(id)
+    db.delete_todo(id)
+    await call.message.answer("Todo o'chirildi")
+    # bot.delete_message(chat_id=call.message.chat.id, message_id=call.message.message_id)
+
+
 if __name__ == '__main__':
     executor.start_polling(dp, skip_updates=True)
