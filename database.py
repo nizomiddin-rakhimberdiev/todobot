@@ -21,9 +21,11 @@ class Database:
         VALUES (?, ?, ?, ?, ?)""", (title, description, done, created_at, updated_at))
         self.connection.commit()
 
-
     def get_todos(self):
         return self.cursor.execute("SELECT * FROM bot_todo").fetchall()
 
-
-
+    def update_todo(self, todo_id):
+        self.cursor.execute("""
+        UPDATE bot_todo SET done = True WHERE id = ?;
+        """, todo_id)
+        self.connection.commit()
